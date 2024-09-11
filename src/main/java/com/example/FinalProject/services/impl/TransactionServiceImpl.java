@@ -27,9 +27,9 @@ public class TransactionServiceImpl implements TransactionService {
     @Autowired
     private PatronRepository patronRepository;
 
-    private static final int BORROWING_LIMIT_REGULAR = 5;  // Example limit for REGULAR members
-    private static final int BORROWING_LIMIT_PREMIUM = 10;  // Example limit for PREMIUM members
-    private static final int BORROW_DAYS = 14;  // Example borrow duration in days
+    private static final int BORROWING_LIMIT_REGULAR = 5;
+    private static final int BORROWING_LIMIT_PREMIUM = 10;
+    private static final int BORROW_DAYS = 14;
 
     @Override
     public String borrowBook(Long patronId, Long bookId) {
@@ -44,6 +44,21 @@ public class TransactionServiceImpl implements TransactionService {
             throw new RuntimeException("No copies available");
         }
 
+        int borrowingLimit = getBorrowingLimit(patron);
+        List<TransactionEntity> transactions = transactionRepository.findAll();
+        int activeBorrowCount = 0;
+        for (TransactionEntity transaction : transactions) {
+            if (transaction.getPatron().getId().equals(patronId) && transaction.getReturn_date() == null) {
+                activeBorrowCount++;
+            }
+        }
+
+        if (activeBorrowCount >= borrowingLimit) {
+            throw new RuntimeException("Patron has reached borrowing limit");
+        }
+
+
+
         book.setAvailable_copies(book.getAvailable_copies() - 1);
         bookRepository.save(book);
 
@@ -55,6 +70,54 @@ public class TransactionServiceImpl implements TransactionService {
         transactionRepository.save(transaction);
         return "Book borrowed successfully";
     }
+    @Override
+    public String returnBook(Long bookId, Long patronId) {
+
+        List<TransactionEntity> transactions = transactionRepository.findAll();
+
+        System.out.println(transactions);
+
+        System.out.println(bookId + patronId);
+
+        TransactionEntity transactionToReturn = null;
+        for (TransactionEntity transaction : transactions) {
+            if (transaction.getBook().getId().equals(bookId)
+                    && transaction.getPatron().getId().equals(patronId)
+                    && transaction.getReturn_date() == null) {
+                transactionToReturn = transaction;
+                break;
+            }
+        }
+
+        System.out.println(transactionToReturn);
+
+        if (transactionToReturn == null) {
+            throw new RuntimeException("No active transaction found for the given book and patron");
+        }
+
+
+        transactionToReturn.setReturn_date(LocalDate.now());
+        transactionRepository.save(transactionToReturn);
+
+
+        BookEntity book = transactionToReturn.getBook();
+        book.setAvailable_copies(book.getAvailable_copies() + 1);
+        bookRepository.save(book);
+
+        return "Book returned successfully";
+    }
+
+    private int getBorrowingLimit(PatronEntity patron) {
+        String membershipType = patron.getMembership_type();
+        if ("Regular".equalsIgnoreCase(membershipType)) {
+            return BORROWING_LIMIT_REGULAR;
+        } else if ("Premium".equalsIgnoreCase(membershipType)) {
+            return BORROWING_LIMIT_PREMIUM;
+        } else {
+            throw new RuntimeException("Unknown membership type");
+        }
+    }
+
 
 
 }
