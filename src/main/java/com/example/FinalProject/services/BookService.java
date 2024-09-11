@@ -20,7 +20,7 @@ public interface BookService {
 
     BookEntity updateBook (Long id, dtoPostBook bookRequest);
 
-    String deleteBook(Long id);
+    ResponseEntity<String> deleteBookByid(Long id);
 
     BookEntity getBookByTitleOrAuthor(String title, String author);
 
