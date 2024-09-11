@@ -1,6 +1,7 @@
 package com.example.FinalProject.services;
 
 import com.example.FinalProject.dto.dtoGetBook;
+import com.example.FinalProject.dto.dtoOverdue;
 import com.example.FinalProject.dto.dtoPostBook;
 import com.example.FinalProject.entity.BookEntity;
 import org.springframework.data.domain.Page;
@@ -24,5 +25,6 @@ public interface BookService {
 
     BookEntity getBookByTitleOrAuthor(String title, String author);
 
-    Page<BookEntity> getBooks(Pageable pageable);
+    List<dtoOverdue> getOverdueBooks();
+//    Page<BookEntity> getBooks(Pageable pageable);
 }

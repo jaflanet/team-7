@@ -1,9 +1,11 @@
 package com.example.FinalProject.controller;
 
 import com.example.FinalProject.dto.dtoGetBook;
+import com.example.FinalProject.dto.dtoOverdue;
 import com.example.FinalProject.dto.dtoPostBook;
 import com.example.FinalProject.entity.BookEntity;
 import com.example.FinalProject.services.BookService;
+import com.example.FinalProject.services.TransactionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -73,4 +75,9 @@ public class BookController {
         return bookService.deleteBookByid(id);
     }
 
+    @GetMapping("/overdue")
+    public ResponseEntity<List<dtoOverdue>> getOverdueBooks() {
+        List<dtoOverdue> overdueBooks = bookService.getOverdueBooks();
+        return ResponseEntity.ok(overdueBooks);
+    }
 }

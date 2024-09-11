@@ -1,5 +1,6 @@
 package com.example.FinalProject.services.impl;
 
+import com.example.FinalProject.dto.dtoOverdue;
 import com.example.FinalProject.entity.BookEntity;
 import com.example.FinalProject.entity.PatronEntity;
 import com.example.FinalProject.entity.TransactionEntity;
@@ -55,6 +56,9 @@ public class TransactionServiceImpl implements TransactionService {
         transactionRepository.save(transaction);
         return "Book borrowed successfully";
     }
-
+    @Override
+    public List<dtoOverdue> getOverdueBooks() {
+        return transactionRepository.findOverdueBooks();
+    }
 
 }

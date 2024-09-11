@@ -1,9 +1,11 @@
 package com.example.FinalProject.services.impl;
 
 import com.example.FinalProject.dto.dtoGetBook;
+import com.example.FinalProject.dto.dtoOverdue;
 import com.example.FinalProject.dto.dtoPostBook;
 import com.example.FinalProject.entity.BookEntity;
 import com.example.FinalProject.repository.BookRepository;
+import com.example.FinalProject.repository.TransactionRepository;
 import com.example.FinalProject.services.BookService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +27,8 @@ public class BookServiceImpl implements BookService {
     @Autowired
     private BookRepository bookRepository;
 
+    @Autowired
+    private  TransactionRepository transactionRepository;
 
     @Override
     public List<dtoGetBook> getAllBooks() {
@@ -104,7 +108,12 @@ public class BookServiceImpl implements BookService {
         return bookRepository.findByTitleOrAuthor(title, author);
     }
 
-    @Override
-    public Page<BookEntity> getBooks(Pageable pageable) { return bookRepository.findAll(pageable); }
+    public List<dtoOverdue> getOverdueBooks() {
+        return transactionRepository.findOverdueBooks();
+    }
+//    @Override
+//    public Page<BookEntity> getBooks(Pageable pageable) { return bookRepository.findAll(pageable); }
 
-}
+
+    }
+
