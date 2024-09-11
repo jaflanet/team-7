@@ -9,6 +9,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
@@ -84,9 +85,15 @@ public class BookServiceImpl implements BookService {
         return bookRepository.save(book);
     }
 
-    public String deleteBook(Long id) {
-        bookRepository.deleteById(id);
-        return "Book deleted";
+    @Override
+    public ResponseEntity<String> deleteBookByid(Long id) {
+        int rowsAffected = bookRepository.deleteBooksById(id);
+
+        if (rowsAffected > 0) {
+            return new ResponseEntity<>("Book id " + id + " deleted successfully.", HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>("Cannot delete book with active loans.", HttpStatus.NOT_FOUND);
+        }
     }
 
     public BookEntity getBookByTitleOrAuthor(String title, String author){
