@@ -9,6 +9,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -35,6 +36,7 @@ public class BookServiceImpl implements BookService {
 
         return dtoGetBooks;
     }
+
 
     public BookEntity getBookById(Long id) {
         return bookRepository.findById(id).orElse(null);
@@ -87,8 +89,9 @@ public class BookServiceImpl implements BookService {
 
 
 
-    public void deleteBook(Long id) {
+    public String deleteBook(Long id) {
         bookRepository.deleteById(id);
+        return "Book deleted";
     }
 
     public BookEntity getBookByTitleOrAuthor(String title, String author){

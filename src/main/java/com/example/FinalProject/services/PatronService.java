@@ -11,7 +11,7 @@ public interface PatronService {
 
     PatronEntity savePatron(dtoPatron patron);
 
-    PatronEntity updatePatron(dtoPatron patron);
+//    PatronEntity updatePatron(dtoPatron patron);
 
     List<dtoPatron> getAllPatrons();
 
