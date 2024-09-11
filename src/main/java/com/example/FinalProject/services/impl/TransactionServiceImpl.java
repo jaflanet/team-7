@@ -35,11 +35,8 @@ public class TransactionServiceImpl implements TransactionService {
     public String borrowBook(Long patronId, Long bookId) {
         PatronEntity patron = patronRepository.findById(patronId)
                 .orElseThrow(() -> new RuntimeException("Invalid patron ID"));
-
         BookEntity book = bookRepository.findById(bookId)
                 .orElseThrow(() -> new RuntimeException("Invalid book ID"));
-
-
         if (book.getAvailable_copies() <= 0) {
             throw new RuntimeException("No copies available");
         }
@@ -52,12 +49,9 @@ public class TransactionServiceImpl implements TransactionService {
                 activeBorrowCount++;
             }
         }
-
         if (activeBorrowCount >= borrowingLimit) {
             throw new RuntimeException("Patron has reached borrowing limit");
         }
-
-
 
         book.setAvailable_copies(book.getAvailable_copies() - 1);
         bookRepository.save(book);
@@ -70,14 +64,11 @@ public class TransactionServiceImpl implements TransactionService {
         transactionRepository.save(transaction);
         return "Book borrowed successfully";
     }
+
     @Override
     public String returnBook(Long bookId, Long patronId) {
 
         List<TransactionEntity> transactions = transactionRepository.findAll();
-
-        System.out.println(transactions);
-
-        System.out.println(bookId + patronId);
 
         TransactionEntity transactionToReturn = null;
         for (TransactionEntity transaction : transactions) {
@@ -95,10 +86,8 @@ public class TransactionServiceImpl implements TransactionService {
             throw new RuntimeException("No active transaction found for the given book and patron");
         }
 
-
         transactionToReturn.setReturn_date(LocalDate.now());
         transactionRepository.save(transactionToReturn);
-
 
         BookEntity book = transactionToReturn.getBook();
         book.setAvailable_copies(book.getAvailable_copies() + 1);
@@ -117,7 +106,4 @@ public class TransactionServiceImpl implements TransactionService {
             throw new RuntimeException("Unknown membership type");
         }
     }
-
-
-
 }

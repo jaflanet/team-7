@@ -28,8 +28,6 @@ public class PatronServiceImpl implements PatronService {
     @Override
     public List<dtoPatron> getAllPatrons() {
         List<PatronEntity> patronEntities = patronRepository.findAll();
-
-        // Convert entity to DTO using stream and mapping
         List<dtoPatron> dtoPatrons = patronEntities.stream()
                 .map(entity -> new dtoPatron(entity.getMembership_type(), entity.getName(), entity.getEmail())) // Example of mapping fields
                 .collect(Collectors.toList());
@@ -43,24 +41,19 @@ public class PatronServiceImpl implements PatronService {
 
     @Override
     public PatronEntity savePatron(dtoPatron createPatron) {
-        // Validate email with regex
         if (!isValidEmail(createPatron.getEmail())) {
             throw new IllegalArgumentException("Invalid email format");
         }
-
         LocalDate currentTimestamp = LocalDate.now();
-
         PatronEntity patron = new PatronEntity();
         patron.setName(createPatron.getName());
         patron.setEmail(createPatron.getEmail());
         patron.setMembership_type(createPatron.getMembership_type());
         patron.setUpdated_at(currentTimestamp);
         patron.setCreated_at(currentTimestamp);
-
         return patronRepository.save(patron);
     }
 
-    // Method to validate email using regex
     private boolean isValidEmail(String email) {
         String emailRegex = "^[a-zA-Z0-9_+&*-]+(?:\\.[a-zA-Z0-9_+&*-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,7}$";
         Pattern pattern = Pattern.compile(emailRegex);
@@ -69,5 +62,4 @@ public class PatronServiceImpl implements PatronService {
         }
         return pattern.matcher(email).matches();
     }
-
 }

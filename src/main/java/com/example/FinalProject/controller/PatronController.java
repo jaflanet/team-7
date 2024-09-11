@@ -26,13 +26,8 @@ public class PatronController {
     @GetMapping("/{id}")
     public ResponseEntity<dtoPatron> getPatronById(@PathVariable Long id) {
         PatronEntity patronEntity = patronService.getPatronById(id);
-        if (patronEntity != null) {
-            // Convert the entity to DTO
-            dtoPatron patronDto = new dtoPatron(patronEntity.getMembership_type(), patronEntity.getName(), patronEntity.getEmail()); // Example of field mapping
-            return ResponseEntity.ok(patronDto);
-        } else {
-            return ResponseEntity.notFound().build();
-        }
+        dtoPatron patronDto = new dtoPatron(patronEntity.getMembership_type(), patronEntity.getName(), patronEntity.getEmail());
+        return ResponseEntity.ok(patronDto);
     }
 
     @PostMapping()
@@ -40,10 +35,5 @@ public class PatronController {
         PatronEntity savedPatron = patronService.savePatron(patron);
         return ResponseEntity.ok(savedPatron);
     }
-
-//    @PutMapping("/{id}")
-//    public ResponseEntity<PatronEntity> updatePatron(Long id, dtoPatron) {
-//        PatronEntity patronEntity = patronService.updatePatron()
-//    }
 
 }

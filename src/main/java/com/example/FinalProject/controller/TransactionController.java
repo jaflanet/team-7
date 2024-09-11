@@ -25,6 +25,5 @@ public class TransactionController {
     public ResponseEntity<String> returnBook(@RequestBody dtoReturn returnRequest) {
             String result = transactionService.returnBook(returnRequest.getBook_id(),returnRequest.getPatron_id());
             return ResponseEntity.ok(result);
-
     }
 }

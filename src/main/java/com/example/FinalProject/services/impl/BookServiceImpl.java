@@ -24,7 +24,6 @@ public class BookServiceImpl implements BookService {
     @Autowired
     private BookRepository bookRepository;
 
-
     @Override
     public List<dtoGetBook> getAllBooks() {
         List<BookEntity> bookEntities = bookRepository.findAll();
@@ -37,11 +36,9 @@ public class BookServiceImpl implements BookService {
         return dtoGetBooks;
     }
 
-
     public BookEntity getBookById(Long id) {
         return bookRepository.findById(id).orElse(null);
     }
-
 
     @Override
     public BookEntity saveBook(dtoPostBook createBookDTO) {
@@ -86,8 +83,6 @@ public class BookServiceImpl implements BookService {
 
         return bookRepository.save(book);
     }
-
-
 
     public String deleteBook(Long id) {
         bookRepository.deleteById(id);

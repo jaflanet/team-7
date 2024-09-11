@@ -27,13 +27,8 @@ public class BookController {
                 @PathVariable Long id
         ){
             BookEntity book = bookService.getBookById(id);
-            if (book != null) {
-                return ResponseEntity.ok(book);
-            } else {
-                return ResponseEntity.notFound().build();
-            }
+            return ResponseEntity.ok(book);
         }
-
 
         @PostMapping
         public ResponseEntity<BookEntity> createBook(@RequestBody dtoPostBook book) {
@@ -47,8 +42,6 @@ public class BookController {
             return ResponseEntity.ok(savedBook);
         }
 
-
-
         // Search book by title/author/genre
         @GetMapping("/search")
         public ResponseEntity<BookEntity> getBookByTitleOrAuthorOrGenre(
@@ -56,12 +49,6 @@ public class BookController {
                 @RequestParam (name = "author", required = false, defaultValue = "") String author
         ){
             BookEntity book = bookService.getBookByTitleOrAuthor(title, author);
-            if (book != null) {
-                return ResponseEntity.ok(book);
-            } else {
-                return ResponseEntity.notFound().build();
-            }
+            return ResponseEntity.ok(book);
         }
-
-
     }
