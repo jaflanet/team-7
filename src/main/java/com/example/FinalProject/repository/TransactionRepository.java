@@ -12,6 +12,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Map;
 
 @Repository
 public interface TransactionRepository extends JpaRepository<TransactionEntity, Long> {
@@ -21,10 +22,12 @@ public interface TransactionRepository extends JpaRepository<TransactionEntity, 
 @Transactional
 @Query(
         value = "SELECT " +
-                "    b.title AS book_title, " +
-                "    p.name AS patron_name, " +
-                "    t.due_date, t.return_date , " +
-                "    (t.return_date - t.due_date) AS days_overdue, (t.fine * 10 * (t.return_date - t.due_date) ) " +
+                "    b.title AS bookTitle, " +
+                "    p.name AS patronName, " +
+                "    t.due_date AS dueDate, " +
+                "    t.return_date AS returnDate, " +
+                "    CAST(t.return_date - t.due_date AS INTEGER) AS daysOverdue, " +
+                "    CAST(t.fine * 10 * (t.return_date - t.due_date) AS DOUBLE PRECISION) AS totalFine " +
                 "FROM " +
                 "    books b " +
                 "JOIN " +
@@ -36,6 +39,8 @@ public interface TransactionRepository extends JpaRepository<TransactionEntity, 
                 "    AND t.return_date > t.due_date",
         nativeQuery = true
 )
-
 List<dtoOverdue> findOverdueBooks();
+
 }
+
+

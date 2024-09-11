@@ -76,8 +76,7 @@ public class BookController {
     }
 
     @GetMapping("/overdue")
-    public ResponseEntity<List<dtoOverdue>> getOverdueBooks() {
-        List<dtoOverdue> overdueBooks = bookService.getOverdueBooks();
-        return ResponseEntity.ok(overdueBooks);
+    public List<dtoOverdue> getOverdueBooks() {
+        return bookService.getOverdueBooks();
     }
 }
