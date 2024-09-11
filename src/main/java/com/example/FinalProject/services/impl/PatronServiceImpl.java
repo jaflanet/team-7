@@ -11,12 +11,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
-
-import static org.springframework.data.jpa.domain.AbstractPersistable_.id;
 
 @Service
 @Slf4j
@@ -28,6 +26,8 @@ public class PatronServiceImpl implements PatronService {
     @Override
     public List<dtoPatron> getAllPatrons() {
         List<PatronEntity> patronEntities = patronRepository.findAll();
+
+        // Convert entity to DTO using stream and mapping
         List<dtoPatron> dtoPatrons = patronEntities.stream()
                 .map(entity -> new dtoPatron(entity.getMembership_type(), entity.getName(), entity.getEmail())) // Example of mapping fields
                 .collect(Collectors.toList());
@@ -41,19 +41,24 @@ public class PatronServiceImpl implements PatronService {
 
     @Override
     public PatronEntity savePatron(dtoPatron createPatron) {
+        // Validate email with regex
         if (!isValidEmail(createPatron.getEmail())) {
             throw new IllegalArgumentException("Invalid email format");
         }
+
         LocalDate currentTimestamp = LocalDate.now();
+
         PatronEntity patron = new PatronEntity();
         patron.setName(createPatron.getName());
         patron.setEmail(createPatron.getEmail());
         patron.setMembership_type(createPatron.getMembership_type());
         patron.setUpdated_at(currentTimestamp);
         patron.setCreated_at(currentTimestamp);
+
         return patronRepository.save(patron);
     }
 
+    // Method to validate email using regex
     private boolean isValidEmail(String email) {
         String emailRegex = "^[a-zA-Z0-9_+&*-]+(?:\\.[a-zA-Z0-9_+&*-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,7}$";
         Pattern pattern = Pattern.compile(emailRegex);
@@ -62,4 +67,54 @@ public class PatronServiceImpl implements PatronService {
         }
         return pattern.matcher(email).matches();
     }
+
+    @Override
+    public PatronEntity updatePatron(Long id, dtoPatron createPatron) {
+        PatronEntity patron = patronRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Patron not found"));
+
+        LocalDate currentTimestamp = LocalDate.now();
+
+        if (createPatron.getName() != null) {
+            patron.setName(createPatron.getName());
+        }
+
+        if (createPatron.getEmail() != null) {
+            patron.setEmail(createPatron.getEmail());
+        }
+
+        if (createPatron.getMembership_type() != null) {
+            patron.setMembership_type(createPatron.getMembership_type());
+        }
+
+        patron.setUpdated_at(LocalDate.from(currentTimestamp));
+
+        return patronRepository.save(patron);
+    }
+
+    @Override
+    public ResponseEntity<String> deletePatron(Long id) {
+        int rowsAffected = patronRepository.deletePatron(id);
+
+        if (rowsAffected > 0) {
+            return new ResponseEntity<>("Patron deleted successfully.", HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>("Cannot delete patron with active loans.", HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @Override
+    public List<Map<String, Object>> getPatronBorrowingHistory(Long id) {
+        return patronRepository.getPatronBorrowingHistory(id);
+    }
+
+    @Override
+    public List<Map<String, Object>> getPatronCurrentBorrowing(Long id) {
+        return patronRepository.getPatronCurrentBorrowing(id);
+    }
+
+//    public List<Map<String, Object>> getBorrowingHistory(Long patronId) {
+//        return patronRepository.findBorrowingHistoryByPatronId(patronId);
+//    }
+
 }
