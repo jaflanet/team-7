@@ -24,6 +24,4 @@ public interface PatronService {
     List<Map<String, Object>> getPatronBorrowingHistory(Long id);
 
     List<Map<String, Object>> getPatronCurrentBorrowing(Long id);
-
-//    List<PatronEntity> getPatronCurrentBorrowedBooks(Long id);
 }

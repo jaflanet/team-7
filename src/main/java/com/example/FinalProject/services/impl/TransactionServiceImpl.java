@@ -1,5 +1,6 @@
 package com.example.FinalProject.services.impl;
 
+import com.example.FinalProject.dto.dtoOverdue;
 import com.example.FinalProject.entity.BookEntity;
 import com.example.FinalProject.entity.PatronEntity;
 import com.example.FinalProject.entity.TransactionEntity;
@@ -13,6 +14,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -70,6 +72,10 @@ public class TransactionServiceImpl implements TransactionService {
 
         List<TransactionEntity> transactions = transactionRepository.findAll();
 
+        System.out.println(transactions);
+
+        System.out.println(bookId + patronId);
+
         TransactionEntity transactionToReturn = null;
         for (TransactionEntity transaction : transactions) {
             if (transaction.getBook().getId().equals(bookId)
@@ -86,8 +92,10 @@ public class TransactionServiceImpl implements TransactionService {
             throw new RuntimeException("No active transaction found for the given book and patron");
         }
 
+
         transactionToReturn.setReturn_date(LocalDate.now());
         transactionRepository.save(transactionToReturn);
+
 
         BookEntity book = transactionToReturn.getBook();
         book.setAvailable_copies(book.getAvailable_copies() + 1);
@@ -105,5 +113,11 @@ public class TransactionServiceImpl implements TransactionService {
         } else {
             throw new RuntimeException("Unknown membership type");
         }
+
+    }
+
+    @Override
+    public List<dtoOverdue> getOverdueBooks() {
+        return transactionRepository.findOverdueBooks();
     }
 }

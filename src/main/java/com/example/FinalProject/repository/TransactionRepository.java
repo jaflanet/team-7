@@ -15,8 +15,7 @@ import java.util.List;
 
 @Repository
 public interface TransactionRepository extends JpaRepository<TransactionEntity, Long> {
-//    List<TransactionEntity> findByPatronId(Long patronId);
-//    long countByPatronAndReturn_dateIsNull(PatronEntity patron);
+
 @Modifying
 @Transactional
 @Query(

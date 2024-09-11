@@ -22,6 +22,12 @@ public class dtoOverdue {
     @JsonProperty("due_date")
     private LocalDate due_date;
 
+    @JsonProperty("return_date")
+    private LocalDate return_date;
+
+    @JsonProperty("days")
+    private Integer days;
+
     @JsonProperty("fine")
-    private Integer fine;
+    private int fine;
 }

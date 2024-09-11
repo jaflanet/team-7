@@ -7,8 +7,7 @@ import java.util.List;
 
 @Component
 public interface TransactionService {
-
     String borrowBook(Long patronId, Long bookId);
-
+    String returnBook(Long bookId, Long patronId);
     List<dtoOverdue> getOverdueBooks();
 }

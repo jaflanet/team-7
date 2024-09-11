@@ -31,5 +31,5 @@ public interface BookService {
     List<dtoOverdue> getOverdueBooks();
 
     List<dtoAvailable> checkBookAvailability(Long bookId);
-//    Page<BookEntity> getBooks(Pageable pageable);
+
 }

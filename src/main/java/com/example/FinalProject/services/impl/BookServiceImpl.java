@@ -108,7 +108,7 @@ public class BookServiceImpl implements BookService {
     public BookEntity getBookByTitleOrAuthor(String title, String author){
         return bookRepository.findByTitleOrAuthor(title, author);
     }
-
+    @Override
     public List<dtoOverdue> getOverdueBooks() {
         return transactionRepository.findOverdueBooks();
     }
@@ -117,9 +117,5 @@ public class BookServiceImpl implements BookService {
     public List<dtoAvailable> checkBookAvailability(Long id) {
         return bookRepository.findBookAvailability(id);
     }
-//    @Override
-//    public Page<BookEntity> getBooks(Pageable pageable) { return bookRepository.findAll(pageable); }
-
-
     }
 
