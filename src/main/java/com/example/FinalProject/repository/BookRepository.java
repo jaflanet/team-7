@@ -67,5 +67,5 @@ public interface BookRepository extends JpaRepository<BookEntity, Long> {
 
     @Query(
             value = "SELECT b.title, b.available_copies FROM books b WHERE b.id = id;", nativeQuery = true)
-    Optional<dtoAvailable> findBookAvailability(@Param("id") Long id);
+    List<dtoAvailable> findBookAvailability(@Param("id") Long id);
 }

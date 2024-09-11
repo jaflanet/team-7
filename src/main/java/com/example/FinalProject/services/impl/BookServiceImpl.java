@@ -114,7 +114,7 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
-    public Optional<dtoAvailable> checkBookAvailability(Long id) {
+    public List<dtoAvailable> checkBookAvailability(Long id) {
         return bookRepository.findBookAvailability(id);
     }
 //    @Override

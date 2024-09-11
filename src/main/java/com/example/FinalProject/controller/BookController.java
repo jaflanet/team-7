@@ -84,8 +84,8 @@ public class BookController {
     }
 
     @GetMapping("/{id}/availability")
-    public ResponseEntity<dtoAvailable> checkBookAvailability(@PathVariable("id") Long id) {
-        Optional<dtoAvailable> availability = bookService.checkBookAvailability(id);
-        return availability.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
+    public ResponseEntity<List<dtoAvailable>> checkBookAvailability(@PathVariable("id") Long id) {
+        List<dtoAvailable> availability = bookService.checkBookAvailability(id);
+        return ResponseEntity.ok(availability);
     }
 }
