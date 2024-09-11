@@ -11,12 +11,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
-
-import static org.springframework.data.jpa.domain.AbstractPersistable_.id;
 
 @Service
 @Slf4j
@@ -68,6 +65,40 @@ public class PatronServiceImpl implements PatronService {
             return false;
         }
         return pattern.matcher(email).matches();
+    }
+
+    @Override
+    public PatronEntity updatePatron(Long id, dtoPatron createPatron) {
+        PatronEntity patron = patronRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Patron not found"));
+
+        LocalDate currentTimestamp = LocalDate.now();
+
+        if (createPatron.getName() != null) {
+            patron.setName(createPatron.getName());
+        }
+
+        if (createPatron.getEmail() != null) {
+            patron.setEmail(createPatron.getEmail());
+        }
+
+        if (createPatron.getMembership_type() != null) {
+            patron.setMembership_type(createPatron.getMembership_type());
+        }
+
+        patron.setUpdated_at(LocalDate.from(currentTimestamp));
+
+        return patronRepository.save(patron);
+    }
+
+    @Override
+    public ResponseEntity<String> deletePatron(Long id) {
+        if (patronRepository.findById(id).isPresent()) {
+            patronRepository.deleteById(id);
+            return new ResponseEntity<>("Patron deleted successfully.", HttpStatus.OK);
+        }
+
+        return new ResponseEntity<>("Failed to delete", HttpStatus.NOT_FOUND);
     }
 
 }

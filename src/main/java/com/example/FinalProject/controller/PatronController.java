@@ -5,7 +5,6 @@ import com.example.FinalProject.entity.PatronEntity;
 import com.example.FinalProject.services.PatronService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -41,9 +40,15 @@ public class PatronController {
         return ResponseEntity.ok(savedPatron);
     }
 
-//    @PutMapping("/{id}")
-//    public ResponseEntity<PatronEntity> updatePatron(Long id, dtoPatron) {
-//        PatronEntity patronEntity = patronService.updatePatron()
-//    }
+    @PutMapping("/{id}")
+    public ResponseEntity<PatronEntity> updatePatron(@PathVariable Long id, @RequestBody dtoPatron patron) {
+        PatronEntity savedPatron = patronService.updatePatron(id, patron);
+        return ResponseEntity.ok(savedPatron);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<String> deletePatron(@PathVariable Long id) {
+        return patronService.deletePatron(id);
+    }
 
 }
