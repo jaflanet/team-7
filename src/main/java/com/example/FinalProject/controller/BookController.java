@@ -1,5 +1,6 @@
 package com.example.FinalProject.controller;
 
+import com.example.FinalProject.dto.dtoAvailable;
 import com.example.FinalProject.dto.dtoGetBook;
 import com.example.FinalProject.dto.dtoOverdue;
 import com.example.FinalProject.dto.dtoPostBook;
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.awt.print.Book;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 
@@ -79,5 +81,11 @@ public class BookController {
     public ResponseEntity<List<dtoOverdue>> getOverdueBooks() {
         List<dtoOverdue> overdueBooks = bookService.getOverdueBooks();
         return ResponseEntity.ok(overdueBooks);
+    }
+
+    @GetMapping("/{id}/availability")
+    public ResponseEntity<dtoAvailable> checkBookAvailability(@PathVariable("id") Long id) {
+        Optional<dtoAvailable> availability = bookService.checkBookAvailability(id);
+        return availability.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
 }

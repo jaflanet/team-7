@@ -1,5 +1,6 @@
 package com.example.FinalProject.repository;
 
+import com.example.FinalProject.dto.dtoAvailable;
 import com.example.FinalProject.dto.dtoOverdue;
 import com.example.FinalProject.entity.BookEntity;
 import com.example.FinalProject.entity.TransactionEntity;
@@ -11,6 +12,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 
 @Repository
@@ -61,4 +63,9 @@ public interface BookRepository extends JpaRepository<BookEntity, Long> {
             nativeQuery = true
     )
     List<dtoOverdue> findOverdueBooks();
+
+
+    @Query(
+            value = "SELECT b.title, b.available_copies FROM books b WHERE b.id = id;", nativeQuery = true)
+    Optional<dtoAvailable> findBookAvailability(@Param("id") Long id);
 }

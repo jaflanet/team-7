@@ -1,5 +1,6 @@
 package com.example.FinalProject.services.impl;
 
+import com.example.FinalProject.dto.dtoAvailable;
 import com.example.FinalProject.dto.dtoGetBook;
 import com.example.FinalProject.dto.dtoOverdue;
 import com.example.FinalProject.dto.dtoPostBook;
@@ -18,7 +19,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -110,6 +111,11 @@ public class BookServiceImpl implements BookService {
 
     public List<dtoOverdue> getOverdueBooks() {
         return transactionRepository.findOverdueBooks();
+    }
+
+    @Override
+    public Optional<dtoAvailable> checkBookAvailability(Long id) {
+        return bookRepository.findBookAvailability(id);
     }
 //    @Override
 //    public Page<BookEntity> getBooks(Pageable pageable) { return bookRepository.findAll(pageable); }
