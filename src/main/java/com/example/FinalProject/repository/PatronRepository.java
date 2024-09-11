@@ -10,6 +10,9 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+import java.util.Map;
+
 
 @Repository
 public interface PatronRepository extends JpaRepository<PatronEntity, Long> {
@@ -18,16 +21,45 @@ public interface PatronRepository extends JpaRepository<PatronEntity, Long> {
     @Modifying
     @Transactional
     @Query(
-            value = "DELETE FROM Patrons " +
+            value = "DELETE FROM patrons " +
                     "WHERE id = :id " +
                     "AND NOT EXISTS ( " +
                     "    SELECT 1 " +
-                    "    FROM Transactions " +
-                    "    WHERE Transactions.patron_id = Patrons.id " +
-                    "    AND Transactions.return_date IS NULL " +
+                    "    FROM transactions " +
+                    "    WHERE transactions.patron_id = patrons.id " +
+                    "    AND transactions.return_date IS NULL " +
                     ");",
             nativeQuery = true
     )
     int deletePatron(@Param("id") Long id);
+
+    @Query(
+            value = "SELECT t.fine, " +
+                    "t.return_date, " +
+                    "t.borrow_date, " +
+                    "b.title " +
+                    "FROM patrons p " +
+                    "JOIN Transactions t ON p.id = t.patron_id " +
+                    "JOIN books b ON t.book_id = b.id " +
+                    "WHERE p.id = :id " +
+                    "AND t.return_date IS NOT NULL " +
+                    "ORDER BY t.borrow_date DESC",
+            nativeQuery = true
+    )
+    List<Map<String, Object>> getPatronBorrowingHistory(@Param("id") Long id);
+
+    @Query(
+            value = "SELECT b.title, " +
+                    "t.due_date, " +
+                    "t.borrow_date " +
+                    "FROM patrons p " +
+                    "JOIN Transactions t ON p.id = t.patron_id " +
+                    "JOIN books b ON t.book_id = b.id " +
+                    "WHERE p.id = :id " +
+                    "AND t.return_date IS NULL " +
+                    "ORDER BY t.borrow_date DESC",
+            nativeQuery = true
+    )
+    List<Map<String, Object>> getPatronCurrentBorrowing(@Param("id") Long id);
 
 }

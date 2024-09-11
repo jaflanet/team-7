@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Map;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
@@ -91,17 +92,6 @@ public class PatronServiceImpl implements PatronService {
         return patronRepository.save(patron);
     }
 
-    //Delete Patron by Id
-//    @Override
-//    public ResponseEntity<String> deletePatron(Long id) {
-//        if (patronRepository.findById(id).isPresent()) {
-//            patronRepository.deleteById(id);
-//            return new ResponseEntity<>("Patron deleted successfully.", HttpStatus.OK);
-//        }
-//
-//        return new ResponseEntity<>("Failed to delete", HttpStatus.NOT_FOUND);
-//    }
-
     @Override
     public ResponseEntity<String> deletePatron(Long id) {
         int rowsAffected = patronRepository.deletePatron(id);
@@ -112,5 +102,19 @@ public class PatronServiceImpl implements PatronService {
             return new ResponseEntity<>("Cannot delete patron with active loans.", HttpStatus.NOT_FOUND);
         }
     }
+
+    @Override
+    public List<Map<String, Object>> getPatronBorrowingHistory(Long id) {
+        return patronRepository.getPatronBorrowingHistory(id);
+    }
+
+    @Override
+    public List<Map<String, Object>> getPatronCurrentBorrowing(Long id) {
+        return patronRepository.getPatronCurrentBorrowing(id);
+    }
+
+//    public List<Map<String, Object>> getBorrowingHistory(Long patronId) {
+//        return patronRepository.findBorrowingHistoryByPatronId(patronId);
+//    }
 
 }

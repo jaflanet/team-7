@@ -6,6 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+import java.util.Map;
 
 @Component
 public interface PatronService {
@@ -19,6 +20,10 @@ public interface PatronService {
     PatronEntity getPatronById(Long id);
 
     ResponseEntity<String> deletePatron(Long id);
+
+    List<Map<String, Object>> getPatronBorrowingHistory(Long id);
+
+    List<Map<String, Object>> getPatronCurrentBorrowing(Long id);
 
 //    List<PatronEntity> getPatronCurrentBorrowedBooks(Long id);
 }
