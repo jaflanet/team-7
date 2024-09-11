@@ -1,10 +1,10 @@
 package com.example.FinalProject.controller;
 
+import com.example.FinalProject.dto.dtoGetBook;
+import com.example.FinalProject.dto.dtoPostBook;
 import com.example.FinalProject.entity.BookEntity;
 import com.example.FinalProject.services.BookService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -18,7 +18,7 @@ public class BookController {
         private BookService bookService;
 
         @GetMapping()
-        public List<BookEntity> getAllBooks() {
+        public List<dtoGetBook> getAllBooks() {
             return bookService.getAllBooks();
         }
 
@@ -35,26 +35,19 @@ public class BookController {
         }
 
 
-        //  Create Book
         @PostMapping
-        public BookEntity createBook(@RequestBody BookEntity book) {
-            return bookService.saveBook(book);
+        public ResponseEntity<BookEntity> createBook(@RequestBody dtoPostBook book) {
+            BookEntity savedBook = bookService.saveBook(book);
+            return ResponseEntity.ok(savedBook);
         }
 
-        //   Put Books
-        @PutMapping("/{id}")
-        public ResponseEntity<BookEntity> updateBook(@PathVariable Long id, @RequestBody BookEntity bookDetails) {
-            BookEntity book = bookService.getBookById(id);
-            if (book != null) {
-                book.setTitle(bookDetails.getTitle());
-                book.setAuthor(bookDetails.getAuthor());
-                book.setIsbn(bookDetails.getIsbn());
-                BookEntity updatedBook = bookService.saveBook(book);
-                return ResponseEntity.ok(updatedBook);
-            } else {
-                return ResponseEntity.notFound().build();
-            }
-        }
+    @PutMapping("/{id}")
+    public ResponseEntity<BookEntity> updateBook(@PathVariable Long id, @RequestBody dtoPostBook book) {
+        BookEntity savedBook = bookService.updateBook(id,book);
+        return ResponseEntity.ok(savedBook);
+    }
+
+
 
         // Search book by title/author/genre
         @GetMapping("/search")
@@ -70,22 +63,5 @@ public class BookController {
             }
         }
 
-//        //   Get all books with pagination
-//        @GetMapping("/page")
-//        public Page<BookEntity> getAllBooks(Pageable pageable) {
-//            return bookService.(pageable);
-//        }
-//
-//        //   Delete book by id
-//        @DeleteMapping("/{id}")
-//        public ResponseEntity<Void> deleteBook(@PathVariable Long id) {
-//            BookEntity genre = bookService.getBookById(id);
-//            if (genre != null) {
-//                bookService.deleteBook(id);
-//                return ResponseEntity.ok().build();
-//            } else {
-//                return ResponseEntity.notFound().build();
-//            }
-//        }
 
     }
