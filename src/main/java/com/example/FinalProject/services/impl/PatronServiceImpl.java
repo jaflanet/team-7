@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Map;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
@@ -26,7 +27,6 @@ public class PatronServiceImpl implements PatronService {
     public List<dtoPatron> getAllPatrons() {
         List<PatronEntity> patronEntities = patronRepository.findAll();
 
-        // Convert entity to DTO using stream and mapping
         List<dtoPatron> dtoPatrons = patronEntities.stream()
                 .map(entity -> new dtoPatron(entity.getMembership_type(), entity.getName(), entity.getEmail())) // Example of mapping fields
                 .collect(Collectors.toList());
@@ -40,7 +40,7 @@ public class PatronServiceImpl implements PatronService {
 
     @Override
     public PatronEntity savePatron(dtoPatron createPatron) {
-        // Validate email with regex
+
         if (!isValidEmail(createPatron.getEmail())) {
             throw new IllegalArgumentException("Invalid email format");
         }
@@ -57,7 +57,7 @@ public class PatronServiceImpl implements PatronService {
         return patronRepository.save(patron);
     }
 
-    // Method to validate email using regex
+
     private boolean isValidEmail(String email) {
         String emailRegex = "^[a-zA-Z0-9_+&*-]+(?:\\.[a-zA-Z0-9_+&*-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,7}$";
         Pattern pattern = Pattern.compile(emailRegex);
@@ -93,12 +93,23 @@ public class PatronServiceImpl implements PatronService {
 
     @Override
     public ResponseEntity<String> deletePatron(Long id) {
-        if (patronRepository.findById(id).isPresent()) {
-            patronRepository.deleteById(id);
-            return new ResponseEntity<>("Patron deleted successfully.", HttpStatus.OK);
-        }
+        int rowsAffected = patronRepository.deletePatron(id);
 
-        return new ResponseEntity<>("Failed to delete", HttpStatus.NOT_FOUND);
+        if (rowsAffected > 0) {
+            return new ResponseEntity<>("Patron deleted successfully.", HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>("Cannot delete patron with active loans.", HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @Override
+    public List<Map<String, Object>> getPatronBorrowingHistory(Long id) {
+        return patronRepository.getPatronBorrowingHistory(id);
+    }
+
+    @Override
+    public List<Map<String, Object>> getPatronCurrentBorrowing(Long id) {
+        return patronRepository.getPatronCurrentBorrowing(id);
     }
 
 }

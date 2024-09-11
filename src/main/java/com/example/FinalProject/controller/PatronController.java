@@ -5,9 +5,11 @@ import com.example.FinalProject.entity.PatronEntity;
 import com.example.FinalProject.services.PatronService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/patrons")
@@ -49,6 +51,24 @@ public class PatronController {
     @DeleteMapping("/{id}")
     public ResponseEntity<String> deletePatron(@PathVariable Long id) {
         return patronService.deletePatron(id);
+    }
+
+    @GetMapping("/{id}/borrow_history")
+    public ResponseEntity<List<Map<String, Object>>> getPatronBorrowingHistory(@PathVariable Long id) {
+        List<Map<String, Object>> history = patronService.getPatronBorrowingHistory(id);
+        if (history.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(history);
+    }
+
+    @GetMapping("/{id}/current_borrowings")
+    public ResponseEntity<List<Map<String, Object>>> getPatronCurrentBorrowing(@PathVariable Long id) {
+        List<Map<String, Object>> history = patronService.getPatronCurrentBorrowing(id);
+        if (history.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(history);
     }
 
 }
