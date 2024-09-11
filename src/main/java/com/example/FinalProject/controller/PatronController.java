@@ -41,9 +41,15 @@ public class PatronController {
         return ResponseEntity.ok(savedPatron);
     }
 
-//    @PutMapping("/{id}")
-//    public ResponseEntity<PatronEntity> updatePatron(Long id, dtoPatron) {
-//        PatronEntity patronEntity = patronService.updatePatron()
-//    }
+    @PutMapping("/{id}")
+    public ResponseEntity<PatronEntity> updatePatron(@PathVariable Long id, @RequestBody dtoPatron patron) {
+        PatronEntity savedPatron = patronService.updatePatron(id, patron);
+        return ResponseEntity.ok(savedPatron);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<String> deletePatron(@PathVariable Long id) {
+        return patronService.deletePatron(id);
+    }
 
 }
