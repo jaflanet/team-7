@@ -1,5 +1,6 @@
 package com.example.FinalProject.repository;
 
+import com.example.FinalProject.dto.dtoAvailable;
 import com.example.FinalProject.dto.dtoOverdue;
 import com.example.FinalProject.entity.BookEntity;
 import com.example.FinalProject.entity.TransactionEntity;
@@ -11,6 +12,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 
 @Repository
@@ -41,24 +43,8 @@ public interface BookRepository extends JpaRepository<BookEntity, Long> {
     )
     int deleteBooksById(@Param("id") Long id);
 
-    @Modifying
-    @Transactional
+
     @Query(
-            value = "SELECT " +
-                    "    b.title AS book_title, " +
-                    "    p.name AS patron_name, " +
-                    "    t.due_date, t.return_date , " +
-                    "    (t.return_date - t.due_date) AS days_overdue, (t.fine * 10 * (t.return_date - t.due_date) ) " +
-                    "FROM " +
-                    "    books b " +
-                    "JOIN " +
-                    "    transactions t ON t.book_id = b.id " +
-                    "JOIN " +
-                    "    patrons p ON t.patron_id = p.id " +
-                    "WHERE " +
-                    "    t.return_date IS NOT NULL " +
-                    "    AND t.return_date > t.due_date",
-            nativeQuery = true
-    )
-    List<dtoOverdue> findOverdueBooks();
+            value = "SELECT b.title, b.available_copies FROM books b WHERE b.id = id;", nativeQuery = true)
+    List<dtoAvailable> findBookAvailability(@Param("id") Long id);
 }

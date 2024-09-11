@@ -1,5 +1,6 @@
 package com.example.FinalProject.controller;
 
+import com.example.FinalProject.dto.dtoAvailable;
 import com.example.FinalProject.dto.dtoGetBook;
 import com.example.FinalProject.dto.dtoOverdue;
 import com.example.FinalProject.dto.dtoPostBook;
@@ -57,7 +58,6 @@ public class BookController {
             @RequestParam(name = "title", required = false, defaultValue = "") String title,
             @RequestParam(name = "author", required = false, defaultValue = "") String author
     ) {
-        // Retrieve a list of books based on the search criteria
         BookEntity books = bookService.getBookByTitleOrAuthor(title, author);
         if (books.getTitle() != null || books.getAuthor() != null) {
             dtoGetBook searchResults = new dtoGetBook(books.getId(), books.getTitle(),
@@ -76,7 +76,14 @@ public class BookController {
     }
 
     @GetMapping("/overdue")
-    public List<dtoOverdue> getOverdueBooks() {
-        return bookService.getOverdueBooks();
+    public ResponseEntity<List<dtoOverdue>> getOverdueBooks() {
+        List<dtoOverdue> overdueBooks = bookService.getOverdueBooks();
+        return ResponseEntity.ok(overdueBooks);
+    }
+
+
+    @GetMapping("/{id}/availability")
+    public List<dtoAvailable> getBookAvailability(@PathVariable Long id) {
+        return bookService.checkBookAvailability(id);
     }
 }

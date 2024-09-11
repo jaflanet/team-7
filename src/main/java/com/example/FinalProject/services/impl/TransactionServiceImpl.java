@@ -70,12 +70,11 @@ public class TransactionServiceImpl implements TransactionService {
     @Override
     public String returnBook(Long bookId, Long patronId) {
 
-<<<<<<< HEAD
- @Override
-    public List<dtoOverdue> getOverdueBooks(){
-        return transactionRepository.findOverdueBooks();
-=======
         List<TransactionEntity> transactions = transactionRepository.findAll();
+
+        System.out.println(transactions);
+
+        System.out.println(bookId + patronId);
 
         TransactionEntity transactionToReturn = null;
         for (TransactionEntity transaction : transactions) {
@@ -93,8 +92,10 @@ public class TransactionServiceImpl implements TransactionService {
             throw new RuntimeException("No active transaction found for the given book and patron");
         }
 
+
         transactionToReturn.setReturn_date(LocalDate.now());
         transactionRepository.save(transactionToReturn);
+
 
         BookEntity book = transactionToReturn.getBook();
         book.setAvailable_copies(book.getAvailable_copies() + 1);
@@ -112,6 +113,11 @@ public class TransactionServiceImpl implements TransactionService {
         } else {
             throw new RuntimeException("Unknown membership type");
         }
->>>>>>> 5080677eec6d662420feddf7eff82d5882105e5a
+
+    }
+
+    @Override
+    public List<dtoOverdue> getOverdueBooks() {
+        return transactionRepository.findOverdueBooks();
     }
 }

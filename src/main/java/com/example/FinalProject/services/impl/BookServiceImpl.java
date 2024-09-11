@@ -1,5 +1,6 @@
 package com.example.FinalProject.services.impl;
 
+import com.example.FinalProject.dto.dtoAvailable;
 import com.example.FinalProject.dto.dtoGetBook;
 import com.example.FinalProject.dto.dtoOverdue;
 import com.example.FinalProject.dto.dtoPostBook;
@@ -18,7 +19,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -27,12 +28,9 @@ public class BookServiceImpl implements BookService {
     @Autowired
     private BookRepository bookRepository;
 
-<<<<<<< HEAD
     @Autowired
     private  TransactionRepository transactionRepository;
 
-=======
->>>>>>> 5080677eec6d662420feddf7eff82d5882105e5a
     @Override
     public List<dtoGetBook> getAllBooks() {
         List<BookEntity> bookEntities = bookRepository.findAll();
@@ -45,9 +43,11 @@ public class BookServiceImpl implements BookService {
         return dtoGetBooks;
     }
 
+
     public BookEntity getBookById(Long id) {
         return bookRepository.findById(id).orElse(null);
     }
+
 
     @Override
     public BookEntity saveBook(dtoPostBook createBookDTO) {
@@ -93,6 +93,7 @@ public class BookServiceImpl implements BookService {
         return bookRepository.save(book);
     }
 
+
     @Override
     public ResponseEntity<String> deleteBookByid(Long id) {
         int rowsAffected = bookRepository.deleteBooksById(id);
@@ -107,13 +108,14 @@ public class BookServiceImpl implements BookService {
     public BookEntity getBookByTitleOrAuthor(String title, String author){
         return bookRepository.findByTitleOrAuthor(title, author);
     }
-
+    @Override
     public List<dtoOverdue> getOverdueBooks() {
         return transactionRepository.findOverdueBooks();
     }
-//    @Override
-//    public Page<BookEntity> getBooks(Pageable pageable) { return bookRepository.findAll(pageable); }
 
-
+    @Override
+    public List<dtoAvailable> checkBookAvailability(Long id) {
+        return bookRepository.findBookAvailability(id);
+    }
     }
 
