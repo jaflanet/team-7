@@ -9,15 +9,13 @@ import java.util.List;
 @Component
 public interface PatronService {
 
-//    PatronEntity savePatron(PatronEntity patron);
-//
-//    PatronEntity updatePatron(PatronEntity patron);
+    PatronEntity savePatron(dtoPatron patron);
+
+    PatronEntity updatePatron(dtoPatron patron);
 
     List<dtoPatron> getAllPatrons();
 
     PatronEntity getPatronById(Long id);
-
-//    List<PatronEntity> findAll();
 
 //    void deletePatron(Long id);
 //
