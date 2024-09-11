@@ -1,9 +1,12 @@
 package com.example.FinalProject.services.impl;
 
+import com.example.FinalProject.dto.dtoAvailable;
 import com.example.FinalProject.dto.dtoGetBook;
+import com.example.FinalProject.dto.dtoOverdue;
 import com.example.FinalProject.dto.dtoPostBook;
 import com.example.FinalProject.entity.BookEntity;
 import com.example.FinalProject.repository.BookRepository;
+import com.example.FinalProject.repository.TransactionRepository;
 import com.example.FinalProject.services.BookService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,7 +19,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -24,6 +27,9 @@ import java.util.stream.Collectors;
 public class BookServiceImpl implements BookService {
     @Autowired
     private BookRepository bookRepository;
+
+    @Autowired
+    private  TransactionRepository transactionRepository;
 
     @Override
     public List<dtoGetBook> getAllBooks() {
@@ -37,9 +43,11 @@ public class BookServiceImpl implements BookService {
         return dtoGetBooks;
     }
 
+
     public BookEntity getBookById(Long id) {
         return bookRepository.findById(id).orElse(null);
     }
+
 
     @Override
     public BookEntity saveBook(dtoPostBook createBookDTO) {
@@ -85,6 +93,7 @@ public class BookServiceImpl implements BookService {
         return bookRepository.save(book);
     }
 
+
     @Override
     public ResponseEntity<String> deleteBookByid(Long id) {
         int rowsAffected = bookRepository.deleteBooksById(id);
@@ -100,7 +109,17 @@ public class BookServiceImpl implements BookService {
         return bookRepository.findByTitleOrAuthor(title, author);
     }
 
-    @Override
-    public Page<BookEntity> getBooks(Pageable pageable) { return bookRepository.findAll(pageable); }
+    public List<dtoOverdue> getOverdueBooks() {
+        return transactionRepository.findOverdueBooks();
+    }
 
-}
+    @Override
+    public List<dtoAvailable> checkBookAvailability(Long id) {
+        return bookRepository.findBookAvailability(id);
+    }
+//    @Override
+//    public Page<BookEntity> getBooks(Pageable pageable) { return bookRepository.findAll(pageable); }
+
+
+    }
+
