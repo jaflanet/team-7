@@ -5,6 +5,7 @@ import com.example.FinalProject.dto.dtoPostBook;
 import com.example.FinalProject.entity.BookEntity;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -19,7 +20,7 @@ public interface BookService {
 
     BookEntity updateBook (Long id, dtoPostBook bookRequest);
 
-    void deleteBook(Long id);
+    String deleteBook(Long id);
 
     BookEntity getBookByTitleOrAuthor(String title, String author);
 
