@@ -6,4 +6,5 @@ import org.springframework.stereotype.Component;
 public interface TransactionService {
 
     String borrowBook(Long patronId, Long bookId);
+    String returnBook(Long bookId, Long patronId);
 }
